@@ -1,26 +1,19 @@
-from flask import Blueprint, request, abort, jsonify
+from flask import Blueprint, request
 
-from converter_app.converter.validator import Validator
-from converter_app.model.conversion import Conversion, ConversionSchema
+from converter_app.converter.converter import Converter
+from converter_app.converter.api_request import ApiRequest
 
 conv = Blueprint('conv', __name__)
 
+COUNTRY_CURRENCY = 'PLN'
+
 @conv.route('/api/convert', methods=['GET'])
 def convert():
-    from_currency = request.args.get('from', type=str, default=None)
+    base_currency = request.args.get('from', type=str, default=None)
     to_currency = request.args.get('to', type=str, default=None)
     amount = request.args.get('amount', type=float, default=None)
-    return operate(from_currency, to_currency, amount)
+    api_request = ApiRequest(base_currency, to_currency, amount)
+    converter = Converter()
+    resp = converter.convert(api_request)
+    return resp
 
-
-def operate(from_currency: str, to_currency: str, amount: int or float):
-    validator = Validator()
-    validate = validator.validate_input(from_currency, to_currency, amount)
-    if not validate:
-        abort(400)
-
-    schema = ConversionSchema()
-    conversion = Conversion(from_currency, to_currency, amount, 1212)
-    print(conversion)
-    resp = schema.dump(conversion)
-    return jsonify(resp), 200
