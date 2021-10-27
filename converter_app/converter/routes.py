@@ -1,6 +1,7 @@
-from flask import Blueprint, request, abort
+from flask import Blueprint, request, abort, jsonify
 
 from converter_app.converter.validator import Validator
+from converter_app.model.conversion import Conversion, ConversionSchema
 
 conv = Blueprint('conv', __name__)
 
@@ -17,4 +18,9 @@ def operate(from_currency: str, to_currency: str, amount: int or float):
     validate = validator.validate_input(from_currency, to_currency, amount)
     if not validate:
         abort(400)
-    return 'success', 200
+
+    schema = ConversionSchema()
+    conversion = Conversion(from_currency, to_currency, amount, 1212)
+    print(conversion)
+    resp = schema.dump(conversion)
+    return jsonify(resp), 200

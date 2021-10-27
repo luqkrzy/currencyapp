@@ -1,8 +1,9 @@
 from flask import Blueprint, json
+from werkzeug.exceptions import HTTPException
 
-errors = Blueprint('errors', __name__)
+errors = Blueprint('error', __name__)
 
-@errors.app_errorhandler(404)
+@errors.app_errorhandler(HTTPException)
 def handle_exception(error):
     response = error.get_response()
     response.data = json.dumps({
