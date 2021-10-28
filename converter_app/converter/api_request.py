@@ -1,5 +1,4 @@
 
-
 class ApiRequest:
 
     def __init__(self,  base_currency: str, to_currency: str, amount: float):

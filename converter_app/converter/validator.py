@@ -9,4 +9,4 @@ class Validator:
                     self.__validate_currency(api_request.to_currency), isinstance(api_request.amount, (int, float))])
 
     def __validate_currency(self, currency: str) -> bool:
-        return isinstance(currency, str) and len(currency) == Validator._code_len
+        return isinstance(currency, str) and len(currency) == Validator._CODE_LEN
