@@ -26,9 +26,9 @@ class Converter:
             context = ConverterContext(strategy=ConverterAlternativeCurrency(), api_request=api_request)
         result = context.convert_currency()
 
-        return self.__prepare_response(api_request, result)
+        return self.prepare_response(api_request, result)
 
-    def __prepare_response(self, api_request: ApiRequest, result: float) -> Response:
+    def prepare_response(self, api_request: ApiRequest, result: float) -> Response:
         schema = ConversionSchema()
         conversion = Conversion(api_request.base_currency, api_request.to_currency, api_request.amount,
                                 api_request.exchange_rate, result)

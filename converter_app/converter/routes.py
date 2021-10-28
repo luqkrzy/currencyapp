@@ -6,7 +6,6 @@ from converter_app.converter.api_request import ApiRequest
 
 conv = Blueprint('conv', __name__)
 
-COUNTRY_CURRENCY = 'PLN'
 
 @conv.route('/api/convert', methods=['GET'])
 def convert():

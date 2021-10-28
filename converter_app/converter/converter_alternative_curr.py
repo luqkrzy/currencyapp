@@ -12,7 +12,4 @@ class ConverterAlternativeCurrency(ConverterStrategy):
         exchange_rate = base_curr_ex_rate/to_curr_ex_rate
 
         api_request.exchange_rate = exchange_rate
-        return self.compute(api_request.amount, exchange_rate)
-
-    def compute(self, amount: float, exchange_rate: float) -> float:
-        return amount*exchange_rate
+        return api_request.amount*exchange_rate

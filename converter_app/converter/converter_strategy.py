@@ -14,10 +14,6 @@ class ConverterStrategy(ABC):
     def convert(self, api_request: ApiRequest) -> float:
         pass
 
-    @abstractmethod
-    def compute(self, amount: float, exchange_rate: float) -> float:
-        pass
-
     def get_exchange_rate_from_api(self, currency: str) -> float:
         req = requests.get(f"{ConverterStrategy._API_URL}/{currency}/{ConverterStrategy._TIME}")
         rate = None
