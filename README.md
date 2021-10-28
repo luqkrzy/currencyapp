@@ -5,6 +5,16 @@ gets exchange rate and converts to requested currency.
 
 Service reply is returned in the JSON format
 
+```
+{
+    "amount": 100.0,
+    "base_currency": "pln",
+    "exchange_rate": 3.9938,
+    "result": 25.038810155741402,
+    "to_currency": "usd"
+}
+```
+
 ### Query string parameters
 * code - currency code i.e USD, PLN
 * amount - number float or integer
@@ -13,3 +23,5 @@ Service reply is returned in the JSON format
 
 ## Run
 todo
+
+
