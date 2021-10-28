@@ -5,7 +5,7 @@ from converter_app.converter.converter_context import ConverterContext
 from converter_app.converter.converter_country_curr import ConverterBaseCountryCurrency
 from converter_app.converter.converter_alternative_curr import ConverterAlternativeCurrency
 from converter_app.converter.validator import Validator
-from converter_app.model.conversion import Conversion, ConversionSchema
+from converter_app.conversion.conversion import Conversion, ConversionSchema
 
 
 class Converter:

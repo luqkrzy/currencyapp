@@ -9,9 +9,8 @@ def handle_exception(error):
     response.data = json.dumps({
         "code": error.code,
         "name": error.name,
-        "description": error.description,
-    })
-    response.content_type = "application/json"
+        "description": error.description})
+    response.content_type = "application/conversion"
     return response
 
 
@@ -21,7 +20,6 @@ def handle_exception(error):
     response.data = json.dumps({
         "code": error.code,
         "name": error.name,
-        "description": "wrong parameter type or length",
-    })
-    response.content_type = "application/json"
+        "description": "wrong parameter type or length"})
+    response.content_type = "application/conversion"
     return response
