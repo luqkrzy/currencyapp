@@ -8,7 +8,6 @@ class ApiRequest:
         self._amount = amount
         self._exchange_rate = None
 
-
     @property
     def base_currency(self) -> str:
         return self._base_currency

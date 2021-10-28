@@ -21,9 +21,9 @@ class Converter:
             abort(400)
 
         if api_request.base_currency.lower() == Converter._COUNTRY_CURRENCY.lower():
-            context = ConverterContext(ConverterBaseCountryCurrency(), api_request)
+            context = ConverterContext(strategy=ConverterBaseCountryCurrency(), api_request=api_request)
         else:
-            context = ConverterContext(ConverterAlternativeCurrency(), api_request)
+            context = ConverterContext(strategy=ConverterAlternativeCurrency(), api_request=api_request)
         result = context.convert_currency()
 
         return self.__prepare_response(api_request, result)

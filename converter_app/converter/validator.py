@@ -2,7 +2,7 @@ from converter_app.converter.api_request import ApiRequest
 
 class Validator:
 
-    _code_len = 3
+    _CODE_LEN = 3
 
     def validate_input(self, api_request: ApiRequest) -> bool:
         return all([self.__validate_currency(api_request.base_currency),
