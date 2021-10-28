@@ -13,8 +13,7 @@ def convert():
     to_currency = request.args.get('to', type=str, default=None)
     amount = request.args.get('amount', type=float, default=None)
     api_request = ApiRequest(base_currency, to_currency, amount)
-    validator = Validator()
-    converter = Converter(validator)
+    converter = Converter(Validator())
     resp = converter.convert(api_request)
     return resp
 
