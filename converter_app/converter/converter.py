@@ -40,7 +40,7 @@ class Converter:
             try:
                 rate = json[Converter._RATE_FIELD][0][Converter._RATE_PRICE_FIELD]
             except KeyError:
-                pass
+                abort(400)
         return rate
 
     def prepare_response(self, api_request: ApiRequest, result: float) -> Response:
