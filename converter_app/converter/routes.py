@@ -1,8 +1,7 @@
 from flask import Blueprint, request
 
-from converter_app.converter.validator import Validator
 from converter_app.converter.converter import Converter
-from converter_app.converter.api_request import ApiRequest
+from converter_app.converter.validator import Validator
 
 conv = Blueprint("conv", __name__)
 
@@ -12,7 +11,6 @@ def convert():
     base_currency = request.args.get("from", type=str, default=None)
     to_currency = request.args.get("to", type=str, default=None)
     amount = request.args.get("amount", type=float, default=None)
-    api_request = ApiRequest(base_currency=base_currency, to_currency=to_currency, amount=amount)
     converter = Converter(validator=Validator())
-    resp = converter.convert(api_request=api_request)
+    resp = converter.convert(base_currency=base_currency, to_currency=to_currency, amount=amount)
     return resp
