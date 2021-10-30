@@ -4,7 +4,8 @@ from flask import Response, abort, jsonify
 from converter_app.conversion.conversion import Conversion, ConversionSchema
 from converter_app.converter.validator import Validator
 from settings import COUNTRY_CURRENCY_PLN, NBP_API_URL
-
+from converter_app import db
+from model.rate import Rate
 
 class Converter:
     def __init__(self, validator: Validator):
