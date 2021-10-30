@@ -1,4 +1,3 @@
-
 class Validator:
     def validate_input(self, base_currency: str, to_currency: str, amount: float) -> bool:
         return all(
