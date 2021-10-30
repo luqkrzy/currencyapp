@@ -12,5 +12,5 @@ def convert():
     to_currency = request.args.get("to", type=str, default=None)
     amount = request.args.get("amount", type=float, default=None)
     converter = Converter(validator=Validator())
-    resp = converter.convert(base_currency=base_currency, to_currency=to_currency, amount=amount)
+    resp = converter.convert(base_currency=base_currency.upper(), to_currency=to_currency.upper(), amount=amount)
     return resp

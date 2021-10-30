@@ -1,5 +1,6 @@
 from converter_app import db
 
+
 class Rate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(3), nullable=False)
@@ -7,6 +8,4 @@ class Rate(db.Model):
     value = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
-        return f"Rate('{self.id}, {self.code}, {self.date}, {self.rate}"
-
-
+        return f"Rate('{self.id}, {self.code}, {self.date}, {self.value}"

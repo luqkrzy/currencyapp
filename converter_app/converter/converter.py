@@ -1,4 +1,5 @@
 import requests
+from datetime import date
 from flask import Response, abort, jsonify
 
 from converter_app.conversion.conversion import Conversion, ConversionSchema
@@ -6,6 +7,7 @@ from converter_app.converter.validator import Validator
 from settings import COUNTRY_CURRENCY_PLN, NBP_API_URL
 from converter_app import db
 from model.rate import Rate
+
 
 class Converter:
     def __init__(self, validator: Validator):
@@ -29,17 +31,24 @@ class Converter:
         )
 
     def get_exchange_rate_from_api(self, currency: str) -> float:
-        rate = None
+        today = date.today().strftime("%Y-%m-%d")
+        data = Rate.query.filter(Rate.code == currency.upper() and Rate.date == today).first()
+        if data:
+            return data.value
         req = requests.get(f"{NBP_API_URL}/{currency}")
+        value = None
         if req.status_code == 200:
             response_data = req.json()
             try:
-                rate = response_data["rates"][0]["mid"]
+                value = response_data["rates"][0]["mid"]
+                rate = Rate(code=currency, date=today, value=value)
+                db.session.add(rate)
+                db.session.commit()
             except KeyError:
                 abort(400)
         elif req.status_code == 404:
             abort(404)
-        return rate
+        return value
 
     def prepare_response(
         self, base_currency: str, to_currency: str, amount: float, result: float, exchange_rate: float
@@ -50,7 +59,7 @@ class Converter:
             to_currency=to_currency.upper(),
             amount=amount,
             exchange_rate=exchange_rate,
-            result=result,
+            result=round(result, 4),
         )
         resp = schema.dump(conversion)
         return jsonify(resp)
