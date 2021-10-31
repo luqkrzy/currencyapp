@@ -6,7 +6,7 @@ from converter_app.conversion.conversion import Conversion, ConversionSchema
 from converter_app.converter.validator import Validator
 from settings import COUNTRY_CURRENCY_PLN, NBP_API_URL
 from converter_app import db
-from model.rate import Rate
+from model.currency_rate import CurrencyRate
 
 
 class Converter:
@@ -31,8 +31,8 @@ class Converter:
         )
 
     def get_exchange_rate_from_api(self, currency: str) -> float:
-        today = date.today().strftime("%Y-%m-%d")
-        data = Rate.query.filter(Rate.code == currency.upper() and Rate.date == today).first()
+        today = date.today()
+        data = CurrencyRate.query.filter(CurrencyRate.currency_code == currency.upper() and CurrencyRate.date == today).first()
         if data:
             return data.value
         req = requests.get(f"{NBP_API_URL}/{currency}")
@@ -41,7 +41,7 @@ class Converter:
             response_data = req.json()
             try:
                 value = response_data["rates"][0]["mid"]
-                rate = Rate(code=currency, date=today, value=value)
+                rate = CurrencyRate(currency_code=currency, date=today, value=value)
                 db.session.add(rate)
                 db.session.commit()
             except KeyError:
