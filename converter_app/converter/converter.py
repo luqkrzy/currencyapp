@@ -4,6 +4,7 @@ from flask import Response, abort, jsonify
 
 from converter_app.conversion.conversion import Conversion, ConversionSchema
 from converter_app.converter.validator import Validator
+from converter_app.error.error import ApiException
 from settings import COUNTRY_CURRENCY_PLN, NBP_API_URL
 from converter_app import db
 from model.currency_rate import CurrencyRate
@@ -16,7 +17,7 @@ class Converter:
     def convert(self, base_currency: str, to_currency: str, amount: float) -> Response:
         validate = self.validator.validate_input(base_currency=base_currency, to_currency=to_currency, amount=amount)
         if not validate:
-            abort(400)
+            raise ApiException("Wrong parameter type or length", 400)
         to_curr_ex_rate = self.get_exchange_rate_from_api(to_currency)
         result = amount / to_curr_ex_rate
         if base_currency.upper() != COUNTRY_CURRENCY_PLN:
@@ -32,22 +33,22 @@ class Converter:
 
     def get_exchange_rate_from_api(self, currency: str) -> float:
         today = date.today()
-        data = CurrencyRate.query.filter(CurrencyRate.currency_code == currency.upper() and CurrencyRate.date == today).first()
+        data = CurrencyRate.query.filter(
+            CurrencyRate.currency_code == currency.upper() and CurrencyRate.date == today
+        ).first()
         if data:
             return data.value
         req = requests.get(f"{NBP_API_URL}/{currency}")
-        value = None
-        if req.status_code == 200:
-            response_data = req.json()
-            try:
-                value = response_data["rates"][0]["mid"]
-                rate = CurrencyRate(currency_code=currency, date=today, value=value)
-                db.session.add(rate)
-                db.session.commit()
-            except KeyError:
-                abort(400)
-        elif req.status_code == 404:
-            abort(404)
+        if req.status_code != 200:
+            abort(req.status_code)
+        response_data = req.json()
+        try:
+            value = response_data["rates"][0]["mid"]
+            rate = CurrencyRate(currency_code=currency, date=today, value=value)
+            db.session.add(rate)
+            db.session.commit()
+        except KeyError:
+            raise ApiException("Wrong parameter type or length", 400)
         return value
 
     def prepare_response(

@@ -7,4 +7,4 @@ class CurrencyRate(db.Model):
     value = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
-        return f"Rate('{self.id}, {self.code}, {self.date}, {self.value}"
+        return f"Rate({self.currency_code}, {self.date}, {self.value})"
