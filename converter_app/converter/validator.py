@@ -10,3 +10,4 @@ class Validator:
 
     def _validate_currency(self, currency: str) -> bool:
         return isinstance(currency, str) and len(currency) == 3
+
