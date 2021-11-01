@@ -1,11 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from settings import Config
+from settings import Config, DevelopmentConfig
 
 db = SQLAlchemy()
 
 
-def create_app(config_class=Config) -> Flask:
+def create_app(config_class=DevelopmentConfig) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_class)
     from converter_app.main.routes import main

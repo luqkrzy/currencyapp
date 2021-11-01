@@ -3,22 +3,22 @@ from converter_app.converter.validator import Validator
 
 
 class TestValidator(TestCase):
-
     @classmethod
     def setUp(cls) -> None:
         cls.validator = Validator()
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         cls.validator = None
 
     def test_validate_input_correct(self):
-        self.assertTrue(self.validator.validate_input('pln', 'Usd', 11.5))
+        self.assertTrue(self.validator.validate_input("pln", "Usd", 11.5))
 
     def test_validate_input_wrong_length(self):
-        self.assertFalse(self.validator.validate_input('plnx', 'Usd', 111.58))
+        self.assertFalse(self.validator.validate_input("plnx", "Usd", 111.58))
+
+    def test_validate_input_negative_amount(self):
+        self.assertFalse(self.validator.validate_input("plnx", "Usd", -111.58))
 
     def test_validate_input_wrong_amount_type(self):
-        self.assertFalse(self.validator.validate_input('pln', 'Usd', '10.45'))
-
-
+        self.assertFalse(self.validator.validate_input("pln", "Usd", "10.45"))

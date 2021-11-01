@@ -32,10 +32,7 @@ class Converter:
         )
 
     def get_exchange_rate_from_api(self, currency: str) -> float:
-        today = date.today()
-        data = CurrencyRate.query.filter(
-            CurrencyRate.currency_code == currency.upper() and CurrencyRate.date == today
-        ).first()
+        data = self.get_currency_rate_from_db(currency)
         if data:
             return data.value
         req = requests.get(f"{NBP_API_URL}/{currency}")
@@ -44,12 +41,18 @@ class Converter:
         response_data = req.json()
         try:
             value = response_data["rates"][0]["mid"]
-            rate = CurrencyRate(currency_code=currency, date=today, value=value)
+            rate = CurrencyRate(currency_code=currency, date=date.today(), value=value)
             db.session.add(rate)
             db.session.commit()
-        except KeyError:
+        except:
             raise ApiException("Wrong parameter type or length", 400)
         return value
+
+    def get_currency_rate_from_db(self, currency) -> CurrencyRate:
+        first = CurrencyRate.query.filter(
+            CurrencyRate.currency_code == currency.upper() and CurrencyRate.date == date.today()
+        ).first()
+        return first
 
     def prepare_response(
         self, base_currency: str, to_currency: str, amount: float, result: float, exchange_rate: float
