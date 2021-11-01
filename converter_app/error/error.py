@@ -16,12 +16,13 @@ class ApiException(Exception):
 
     def to_dict(self):
         rv = dict(self.payload or ())
+        rv['code'] = self.status_code
         rv["message"] = self.message
         return rv
 
 
 @errors.app_errorhandler(ApiException)
-def handle_invalid_usage(error: ApiException):
+def handle_invalid_usage(error: ApiException) -> Response:
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
